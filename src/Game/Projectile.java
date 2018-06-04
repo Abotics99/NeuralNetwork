@@ -51,11 +51,11 @@ public class Projectile implements Transform{
 				returnSpeed = 1;
 				
 			}
-			posX += velX * returnSpeed * GlobalSettings.getScreen().getDeltaTime();
-			posY += velY * returnSpeed * GlobalSettings.getScreen().getDeltaTime();
+			posX += velX * returnSpeed;
+			posY += velY * returnSpeed;
 		}else {
-			posX += velX * speed * GlobalSettings.getScreen().getDeltaTime();
-			posY += velY * speed * GlobalSettings.getScreen().getDeltaTime();
+			posX += velX * speed;
+			posY += velY * speed;
 		}
 		
 		checkWorldCollisions(world);

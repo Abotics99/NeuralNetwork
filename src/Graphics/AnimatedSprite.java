@@ -97,7 +97,7 @@ public class AnimatedSprite {
 				
 			}
 			if (!pause) {
-				frame+=screen.getDeltaTimeInt();
+				frame+=1;
 
 				if (frame >= (frames.length) * updatesPerFrame) {
 					if (looping) {
@@ -107,7 +107,7 @@ public class AnimatedSprite {
 							hidden = true;
 						} else {
 							pause = true;
-							frame-=screen.getDeltaTimeInt();
+							frame-=1;
 						}
 					}
 				}

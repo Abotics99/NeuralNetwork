@@ -90,15 +90,15 @@ public class Bat implements Enemy, Transform, Hazard {
 				velX *= damping;
 				velY *= damping;
 				updateCollisions(GlobalSettings.getGame().getCurrentWorld(), 200, -4, -2, 14, 12);
-				posX += velX * GlobalSettings.getScreen().getDeltaTime();
-				posY += velY * GlobalSettings.getScreen().getDeltaTime();
+				posX += velX;
+				posY += velY;
 			}
 		} else {
 			velY += 0.1;
 			velX *= damping;
 			updateCollisions(GlobalSettings.getGame().getCurrentWorld(), 200, -4, -2, 14, 12);
-			posX += velX * GlobalSettings.getScreen().getDeltaTime();
-			posY += velY * GlobalSettings.getScreen().getDeltaTime();
+			posX += velX;
+			posY += velY;
 		}
 		bat.setPos((int) posX, (int) posY);
 		bat.setFlashing(iFrame > 0);

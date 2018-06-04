@@ -282,11 +282,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		this.shakeAmount = amount;
 	}
 	
-	public double getDeltaTime() {
-		return deltaTime/1000000000*60;
-	}
 	
-	public int getDeltaTimeInt() {
-		return (int) Math.round(deltaTime/1000000000*60);
-	}
+	
+	
 }

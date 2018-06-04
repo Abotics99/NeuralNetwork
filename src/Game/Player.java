@@ -103,8 +103,8 @@ public class Player implements Transform {
 	public void update() {
 		playerVelY += gravity;
 		updateCollisions(world, 200);
-		playerY += playerVelY * GlobalSettings.getScreen().getDeltaTime();
-		playerX += playerVelX * GlobalSettings.getScreen().getDeltaTime();
+		playerY += playerVelY;
+		playerX += playerVelX;
 		if (grounded) {
 			dampening = groundedDampening;
 			acceleration = groundedAcceleration;
