@@ -52,6 +52,7 @@ public class NN_Main implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("bye...");
 		System.exit(0);
 	}
 

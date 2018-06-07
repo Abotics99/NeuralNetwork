@@ -8,6 +8,7 @@ import Graphics.Button;
 import Graphics.Fader;
 import Graphics.Screen;
 import Graphics.Sprite;
+import Helpers.WorldLoader;
 
 public class Game {
 
@@ -43,6 +44,8 @@ public class Game {
 	
 	Sound mainTheme;
 	ArrayList<CheckPoint> checkPoints = new ArrayList<CheckPoint>();
+	
+	WorldLoader worldData;
 
 	public Game() {
 		this.fontData = GlobalSettings.getFontData();
@@ -53,13 +56,11 @@ public class Game {
 		title = new Sprite(new int[][] { { 233, 234, 235, 236, 237, 238, 239 }, { 249, 250, 251, 252, 253, 254, 255 } },
 				Color.WHITE, 3);
 		deathScreen = new Sprite(new int[][] { { 320, 321, 322, 323, 324}, { 336, 337, 338, 339, 340} }, Color.WHITE, 3);
-		world = new Sprite(Helpers.ArrayLoader.loadArray("World_1"), Color.WHITE, 1);
+		worldData = new WorldLoader("World_1");
+		world = new Sprite(worldData.getLayer(), Color.WHITE, 1);
 		player = new Player(startX, startY, world);
 		setCamera(player.getPosX(), player.getPosY());
-		initEnemies();
-		checkPoints.add(new CheckPoint(766, 428, player));
-		checkPoints.add(new CheckPoint(978, 757, player));
-		checkPoints.add(new CheckPoint(70, 668, player));
+		initObjects();
 		fader = new Fader(10, new Color(35, 58, 71, 255));
 		pauseMenu = true;
 		fader.fadeInstant();
@@ -67,36 +68,18 @@ public class Game {
 		
 	}
 	
-	void initEnemies() {
-		addBat(920, 315);
-		addBat(1110, 395);
-		addBat(1168, 395);
-		addBat(1033, 465);
-		addBat(1155, 495);
-		addBat(1235, 495);
-		addBat(1330, 595);
-		addBat(1221, 635);
-		addBat(887, 685);
-		addBat(903, 765);
-		addBat(817, 785);
-		addBat(798, 695);
-		addBat(727, 715);
-		addBat(705, 715);
-		addBat(789, 469);
-		addBat(383, 735);
-		addBat(266, 765);
-		addBat(205, 775);
-		addBat(184, 835);
-		addBat(139, 929);
-		addBat(106, 1035);
-		addBat(17, 1065);
-		
-		addHound(1177, 695);
-		addHound(1812, 515);
-		addHound(856, 195);
-		addHound(1321, 225);
-		addHound(289, 835);
-		addHound(78, 975);
+	void initObjects() {
+		for(Object obj: worldData.getObjects()) {
+			if(obj.getId() == 269) {
+				addBat(obj.getPosX(), obj.getPosY()-10);
+			}
+			if(obj.getId() == 318) {
+				addHound(obj.getPosX()-10, obj.getPosY()-20);
+			}
+			if(obj.getId() == 273) {
+				checkPoints.add(new CheckPoint(obj.getPosX(), obj.getPosY()-20, player));
+			}
+		}
 	}
 	
 	void addBat(int x, int y) {
