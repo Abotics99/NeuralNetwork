@@ -23,7 +23,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 	public static final int WIDTH = 260;
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 3;
-	public static final String NAME = "NN_Fun";
+	public static final String NAME = "Jumpy Shoot Boy";
 	private JFrame frame;
 	private static final long serialVersionUID = 1L;
 
@@ -60,6 +60,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 	public double deltaTime;
 	public long lastTime;
 	public long time;
+	private int frameCount;
 
 	public Screen() {
 		addMouseListener(this);
@@ -82,7 +83,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		frame.add(this, BorderLayout.CENTER);
 		frame.pack();
 
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
@@ -110,6 +111,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		time = System.nanoTime();
 		deltaTime = time - lastTime;
 		lastTime = time;
+		frameCount++;
 	}
 
 	public int getPixel(int index) {
@@ -281,8 +283,8 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		this.shakeTimer = length;
 		this.shakeAmount = amount;
 	}
-	
-	
-	
-	
+
+	public int getFrameCount() {
+		return frameCount;
+	}
 }

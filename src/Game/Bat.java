@@ -6,12 +6,13 @@ import Graphics.AnimatedSprite;
 import Graphics.Sprite;
 
 public class Bat implements Enemy, Transform, Hazard {
+	double seed = Helpers.Calc.RandomRange(0.9, 1.1);
 	double posX = 0;
 	double posY = 0;
 	double velX = 0;
 	double velY = 0;
 	double maxSpeed = 1;
-	double acceleration = 0.05;
+	double acceleration = 0.05 * (seed/2);
 	double damping = 0.97;
 	Transform target;
 	AnimatedSprite bat;
@@ -24,6 +25,7 @@ public class Bat implements Enemy, Transform, Hazard {
 	boolean dead = false;
 	boolean idle = true;
 	boolean falling = false;
+	boolean walled = true;
 
 	int[][] flap_0 = new int[][] { { 264 } };
 	int[][] flap_1 = new int[][] { { 265 } };
@@ -86,10 +88,19 @@ public class Bat implements Enemy, Transform, Hazard {
 				}
 			} else {
 				velX += acceleration * (tempX / dist) * Helpers.Calc.RandomRange(-0.1, 1.2);
-				velY += acceleration * (tempY / dist) * Helpers.Calc.RandomRange(-0.1, 1.2);
+				if(walled) {
+					if(posY > target.getPosY()) {
+						velY += (acceleration * (tempY / dist) * (Math.sin((GlobalSettings.getScreen().getFrameCount()/5.0) + (seed*10))+0.5) * 2)-acceleration;
+					}else {
+						velY += (acceleration * (tempY / dist) * (Math.sin((GlobalSettings.getScreen().getFrameCount()/5.0) + (seed*10))+0.5) * 2)+acceleration;
+					}
+				}else {
+					velY += acceleration * (tempY / dist) * (Math.sin((GlobalSettings.getScreen().getFrameCount()/5.0) + (seed*10))+0.5) * 2;
+				}
 				velX *= damping;
 				velY *= damping;
-				updateCollisions(GlobalSettings.getGame().getCurrentWorld(), 200, -4, -2, 14, 12);
+				walled = false;
+				updateCollisions(GlobalSettings.getGame().getCurrentWorld(), 200, -5, -5, 15, 15);
 				posX += velX;
 				posY += velY;
 			}
@@ -113,10 +124,12 @@ public class Bat implements Enemy, Transform, Hazard {
 		if (velX < 0 && checkCol((int) posX + xMin - 1, (int) posY + yMin, (int) posX + xMin - 1, (int) posY + yMax,
 				spr, colIndex)) {
 			velX = 0;
+			walled = true;
 		}
 		if (velX > 0 && checkCol((int) posX + xMax + 1, (int) posY + yMin, (int) posX + xMax + 1, (int) posY + yMax,
 				spr, colIndex)) {
 			velX = 0;
+			walled = true;
 		}
 		if (velY < 0 && checkCol((int) posX + xMin, (int) posY + yMin - 1, (int) posX + xMax, (int) posY + yMin - 1,
 				spr, colIndex)) {
@@ -196,7 +209,7 @@ public class Bat implements Enemy, Transform, Hazard {
 	}
 
 	public boolean colliding(double x, double y) {
-		return x > posX && x < posX + getWidth() && y > posY && y < posY + getHeight();
+		return x >= posX && x <= posX + getWidth() && y >= posY && y <= posY + getHeight();
 	}
 
 	public double getVelX() {
@@ -212,7 +225,7 @@ public class Bat implements Enemy, Transform, Hazard {
 	}
 
 	public boolean isHit(double x, double y) {
-		return x > posX && x < posX + getWidth() && y > posY && y < posY + getHeight() && !dead;
+		return x >= posX && x <= posX + getWidth() && y >= posY && y <= posY + getHeight() && !dead;
 	}
 
 	public Hazard getHazard() {
