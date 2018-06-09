@@ -13,6 +13,8 @@ public class Projectile implements Transform {
 	private double velY = 0;
 	private Sprite projectile;
 	private Sprite world;
+	private int returnTime = 40;
+	private int timer = 0;
 
 	private boolean returning = false;
 	private boolean hidden = true;
@@ -33,7 +35,14 @@ public class Projectile implements Transform {
 	}
 
 	public void update(double x, double y) {
+		if(timer>0) {
+			timer--;
+			if(timer == 0) {
+				returning = true;
+			}
+		}
 		if (returning) {
+			timer = 0;
 			double tempX = x - posX;
 			double tempY = y - posY + 5;
 			double dist = Math.sqrt(Math.pow(tempX, 2) + Math.pow(tempY, 2));
@@ -94,6 +103,7 @@ public class Projectile implements Transform {
 			hidden = false;
 			shootSound.play();
 			GlobalSettings.getScreen().shake(1, 1);
+			timer = returnTime;
 		}
 	}
 
