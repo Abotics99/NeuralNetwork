@@ -97,9 +97,9 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		}
 		
 		
-		BufferStrategy bs = getBufferStrategy();
+		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
-			createBufferStrategy(3);
+			this.createBufferStrategy(2);
 			return;
 		}
 
@@ -107,11 +107,12 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
 		g.dispose();
-		bs.show();
 		time = System.nanoTime();
 		deltaTime = time - lastTime;
 		lastTime = time;
 		frameCount++;
+		bs.show();
+		
 	}
 
 	public int getPixel(int index) {

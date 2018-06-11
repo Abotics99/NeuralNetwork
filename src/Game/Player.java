@@ -55,6 +55,11 @@ public class Player implements Transform {
 	int[][] dust_1 = new int[][] { { 258, 259 } };
 	int[][] dust_2 = new int[][] { { 260, 261 } };
 	int[][] dust_3 = new int[][] { { 262, 263 } };
+	int[][] headlessIdle_1 = new int[][] { { 329 }, { 345 } };
+	int[][] headlessStep_1 = new int[][] { { 330 }, { 346 } };
+	int[][] headlessStep_2 = new int[][] { { 331 }, { 347 } };
+	
+	int[][][] runCycle =  new int[][][] {idle_1,step_1,idle_1,step_2};
 
 	public Player(int x, int y, Sprite world) {
 		player = new Sprite(step_1, Color.WHITE, 1);
@@ -115,6 +120,11 @@ public class Player implements Transform {
 		playerVelX *= dampening;
 		updateAnimations();
 		projectile.update(playerX, playerY);
+		if(!projectile.isHidden()) {
+			runCycle =  new int[][][] {headlessIdle_1,headlessStep_1,headlessIdle_1,headlessStep_2};
+		}else {
+			runCycle =  new int[][][] {idle_1,step_1,idle_1,step_2};
+		}
 		checkHazards();
 		healthBar.update();
 		if (iFrames > 0) {
@@ -133,19 +143,19 @@ public class Player implements Transform {
 			player.setFlipped(true);
 		}
 		if (animationTimer == 0) {
-			player.setSpriteTiles(idle_1);
+			player.setSpriteTiles(runCycle[0]);
 		}
 		if (animationTimer == 4) {
-			player.setSpriteTiles(step_1);
+			player.setSpriteTiles(runCycle[1]);
 			if (grounded) {
 				step.play();
 			}
 		}
 		if (animationTimer == 12) {
-			player.setSpriteTiles(idle_1);
+			player.setSpriteTiles(runCycle[2]);
 		}
 		if (animationTimer == 16) {
-			player.setSpriteTiles(step_2);
+			player.setSpriteTiles(runCycle[3]);
 			if (grounded) {
 				step.play();
 			}
@@ -275,15 +285,15 @@ public class Player implements Transform {
 				if (canShoot) {
 					if (x == 0 & y == 0) {
 						if (player.isFlipped()) {
-							projectile.shoot(playerX, playerY + 5, -1, 0);
+							projectile.shoot(playerX, playerY, -1, 0);
 						} else {
-							projectile.shoot(playerX, playerY + 5, 1, 0);
+							projectile.shoot(playerX, playerY, 1, 0);
 						}
 					} else {
 						if (projectile.isHidden()) {
 							playerVelY = -y * 4;
 						}
-						projectile.shoot(playerX, playerY + 5, x, y);
+						projectile.shoot(playerX, playerY, x, y);
 
 					}
 					canShoot = false;

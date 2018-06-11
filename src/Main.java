@@ -14,7 +14,7 @@ import Helpers.SaveManager;
  * -button.render outta bounds exception protection 
  */
 
-public class NN_Main implements Runnable {
+public class Main implements Runnable {
 
 	Screen screen = new Screen();
 
@@ -37,7 +37,7 @@ public class NN_Main implements Runnable {
 
 	public static void main(String[] args) {
 		log.saveData(new String[] { "-- this is the beginning of the the growth logs --" });
-		new NN_Main().start();
+		new Main().start();
 	}
 
 	public void run() {
