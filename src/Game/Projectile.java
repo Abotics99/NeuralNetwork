@@ -102,7 +102,7 @@ public class Projectile implements Transform {
 			velY = -0.5;
 			velX = -velX / 2;
 			if (!hidden) {
-				hitWallSound.play();
+				hitWallSound.playAt((int)posX,(int)posY);
 			}
 		}
 	}

@@ -42,7 +42,7 @@ public class Game {
 
 	boolean pauseMenu = false;
 	
-	Sound mainTheme;
+	Music mainTheme;
 	ArrayList<CheckPoint> checkPoints = new ArrayList<CheckPoint>();
 	
 	WorldLoader worldData;
@@ -64,9 +64,7 @@ public class Game {
 		fader = new Fader(10, new Color(35, 58, 71, 255));
 		pauseMenu = true;
 		fader.fadeInstant();
-		mainTheme = new Sound("MainSong");
-		mainTheme.setGain(-10);
-		
+		mainTheme = new Music("MainSong");
 	}
 	
 	void initObjects() {
@@ -189,7 +187,7 @@ public class Game {
 		
 		if(fader.isTotallyVisible()) {
 			if(!mainTheme.isPlaying()) {
-				mainTheme.loop();
+				mainTheme.play();
 			}
 		}else {
 			if(mainTheme.isPlaying()) {

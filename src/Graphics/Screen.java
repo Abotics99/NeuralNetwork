@@ -11,12 +11,16 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
+
+import kuusisto.tinysound.TinySound;
 
 public class Screen extends Canvas implements MouseInputListener, KeyListener {
 	// --screenSettings--
@@ -86,7 +90,16 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.out.println("bye...");
+				TinySound.shutdown();
+			}
+		});
 	}
+	
+	
 
 	public void render() {
 		if(shakeTimer>0) {

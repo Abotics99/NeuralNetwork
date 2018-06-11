@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 import Game.Game;
 import Game.GlobalSettings;
 import Graphics.Screen;
-import Helpers.SaveManager;
+import kuusisto.tinysound.TinySound;
 
 /*TODO
  * -button.render outta bounds exception protection 
@@ -32,15 +32,12 @@ public class Main implements Runnable {
 	// --jus' Declarin--
 	public final boolean FASTMODE = false; // disables rendering and cycles as fast as it can
 
-	static SaveManager save = new SaveManager("saveData");
-	static SaveManager log = new SaveManager("growthLogs");
-
 	public static void main(String[] args) {
-		log.saveData(new String[] { "-- this is the beginning of the the growth logs --" });
 		new Main().start();
 	}
 
 	public void run() {
+		TinySound.init();
 		screen.init();
 		GlobalSettings.setScreen(screen);
 		init();
@@ -53,6 +50,7 @@ public class Main implements Runnable {
 			}
 		}
 		System.out.println("bye...");
+		TinySound.shutdown();
 		System.exit(0);
 	}
 
