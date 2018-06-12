@@ -46,6 +46,9 @@ public class Game {
 	ArrayList<CheckPoint> checkPoints = new ArrayList<CheckPoint>();
 	
 	WorldLoader worldData;
+	
+	double camOffsetX = 0;
+	double camOffsetY = -10;
 
 	public Game() {
 		this.fontData = GlobalSettings.getFontData();
@@ -59,7 +62,7 @@ public class Game {
 		worldData = new WorldLoader("World_1");
 		world = new Sprite(worldData.getLayer(), Color.WHITE, 1);
 		player = new Player(startX, startY, world);
-		setCamera(player.getPosX(), player.getPosY());
+		setCamera(player.getPosX() + camOffsetX, player.getPosY() + camOffsetY);
 		initObjects();
 		fader = new Fader(10, new Color(35, 58, 71, 255));
 		pauseMenu = true;
@@ -113,7 +116,8 @@ public class Game {
 	public void update() {
 		if (freezeFrame-- <= 0) {
 			if (!paused && fader.isTotallyVisible()) {
-				lerpCamera(player.getPosX(), player.getPosY(), 0.8);
+				updateCameraOffset();
+				lerpCamera(player.getPosX() + camOffsetX, player.getPosY() + camOffsetY, 0.8);
 				titleBob = Math.sin(frameCounter * 0.05) * 5;
 				if (screen.escapePressed() && !player.isDead()) {
 					pauseMenu = true;
@@ -193,6 +197,18 @@ public class Game {
 			if(mainTheme.isPlaying()) {
 				mainTheme.stop();
 			}
+		}
+	}
+	
+	private void updateCameraOffset() {
+		if(player.getVelX()>=0.1 && camOffsetX < 30) {
+			camOffsetX+= 1;
+		}
+		if(player.getVelX()<=-0.1 && camOffsetX > -30) {
+			camOffsetX+= -1;
+		}
+		if(Math.abs(player.getVelX()) < 0.1) {
+			camOffsetX*=0.95;
 		}
 	}
 

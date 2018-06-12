@@ -23,6 +23,7 @@ public class Player implements Transform {
 	double dampening;
 	double maxSpeed = 2;
 	double jumpHeight = 4.5;
+	double terminalVelocity = 10;
 	boolean grounded = false;
 	int animationTimer = 0;
 	boolean canJump = false;
@@ -108,6 +109,8 @@ public class Player implements Transform {
 	public void update() {
 		playerVelY += gravity;
 		updateCollisions(world, 200);
+		playerVelX = Helpers.Calc.clamp(playerVelX, -terminalVelocity, terminalVelocity);
+		playerVelY = Helpers.Calc.clamp(playerVelY, -terminalVelocity, terminalVelocity);
 		playerY += playerVelY;
 		playerX += playerVelX;
 		if (grounded) {
@@ -336,8 +339,8 @@ public class Player implements Transform {
 			iFrames = 100;
 			GlobalSettings.getScreen().shake(4, 4);
 			GlobalSettings.getGame().addFreezeFrames(10);
-			playerVelX += (transform.getVelX() * 10);
-			playerVelY += (transform.getVelY() * 10) - 2;
+			playerVelX += Helpers.Calc.clamp(transform.getVelX() * 10,-1,1);
+			playerVelY += Helpers.Calc.clamp((transform.getVelY() * 10) - 2,-1,1);
 		}
 		if (health <= 0 && !dead) {
 			dead = true;

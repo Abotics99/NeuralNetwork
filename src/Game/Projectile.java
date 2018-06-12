@@ -85,26 +85,49 @@ public class Projectile implements Transform {
 			posX += velX * speed;
 			posY += velY * speed;
 		}
-		if (!returning && velY > 10) {
+		if (!returning && velY > 2) {
 			returning = true;
 		}
 
 		checkWorldCollisions(world);
 		if (!hidden) {
-			checkEnemyCollisions();
 			projectile.setPause(Math.abs(velY) < 0.05 && Math.abs(velX) < 0.05);
+			if (!projectile.isPaused()) {
+				checkEnemyCollisions();
+			}
 		}
 	}
 
 	void checkWorldCollisions(Sprite world) {
-		if (!returning && !falling && world.getTile((int) posX + 5, (int) posY + 5) == 200) {
+		if (!returning && !falling && testCollisions(world, 200, -5, -5, 15, 15)) {
 			falling = true;
 			velY = -0.5;
 			velX = -velX / 2;
 			if (!hidden) {
-				hitWallSound.playAt((int)posX,(int)posY);
+				hitWallSound.playAt((int) posX, (int) posY);
 			}
 		}
+	}
+
+	public boolean testCollisions(Sprite spr, int colIndex, int xMin, int yMin, int xMax, int yMax) {
+		boolean anyCollisions = false;
+		if (velY > 0 && checkCol((int) posX + xMin, (int) posY + yMax + 1, (int) posX + xMax, (int) posY + yMax + 1,
+				spr, colIndex)) {
+			anyCollisions = true;
+		}
+		if (velX < 0 && checkCol((int) posX + xMin - 1, (int) posY + yMin, (int) posX + xMin - 1, (int) posY + yMax,
+				spr, colIndex)) {
+			anyCollisions = true;
+		}
+		if (velX > 0 && checkCol((int) posX + xMax + 1, (int) posY + yMin, (int) posX + xMax + 1, (int) posY + yMax,
+				spr, colIndex)) {
+			anyCollisions = true;
+		}
+		if (velY < 0 && checkCol((int) posX + xMin, (int) posY + yMin - 1, (int) posX + xMax, (int) posY + yMin - 1,
+				spr, colIndex)) {
+			anyCollisions = true;
+		}
+		return anyCollisions;
 	}
 
 	public void updateCollisions(Sprite spr, int colIndex, int xMin, int yMin, int xMax, int yMax) {
@@ -129,6 +152,10 @@ public class Projectile implements Transform {
 		if (velX > 0 && checkCol((int) posX + xMax + 1, (int) posY + yMin, (int) posX + xMax + 1, (int) posY + yMax,
 				spr, colIndex)) {
 			velX = 0;
+		}
+		if (velY < 0 && checkCol((int) posX + xMin, (int) posY + yMin - 1, (int) posX + xMax, (int) posY + yMin - 1,
+				spr, colIndex)) {
+			velY = 0;
 		}
 	}
 

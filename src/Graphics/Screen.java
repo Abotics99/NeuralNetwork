@@ -20,6 +20,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputListener;
 
+import Game.GlobalSettings;
 import kuusisto.tinysound.TinySound;
 
 public class Screen extends Canvas implements MouseInputListener, KeyListener {
@@ -59,8 +60,8 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 	private double cameraOffsetY = 0;
 	int shakeTimer = 0;
 	int shakeAmount;
-	
-	//timing
+
+	// timing
 	public double deltaTime;
 	public long lastTime;
 	public long time;
@@ -90,7 +91,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
+
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.out.println("bye...");
@@ -98,18 +99,16 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 			}
 		});
 	}
-	
-	
 
 	public void render() {
-		if(shakeTimer>0) {
-			setCameraOffset(Helpers.Calc.RandomRange(-shakeAmount, shakeAmount), Helpers.Calc.RandomRange(-shakeAmount, shakeAmount));
+		if (shakeTimer > 0) {
+			setCameraOffset(Helpers.Calc.RandomRange(-shakeAmount, shakeAmount),
+					Helpers.Calc.RandomRange(-shakeAmount, shakeAmount));
 			shakeTimer--;
-		}else {
-			setCameraOffset(0,0);
+		} else {
+			setCameraOffset(0, 0);
 		}
-		
-		
+
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
 			this.createBufferStrategy(2);
@@ -125,7 +124,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 		lastTime = time;
 		frameCount++;
 		bs.show();
-		
+
 	}
 
 	public int getPixel(int index) {
@@ -157,8 +156,9 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 	}
 
 	public Color lerpColor(Color col1, Color col2, int alpha) {
-		return new Color((int)Helpers.Calc.lerp(col1.getRed(), col2.getRed(), alpha/255.0),(int)Helpers.Calc.lerp(col1.getGreen(), col2.getGreen(), alpha/255.0),
-				(int)Helpers.Calc.lerp(col1.getBlue(), col2.getBlue(), alpha/255.0));
+		return new Color((int) Helpers.Calc.lerp(col1.getRed(), col2.getRed(), alpha / 255.0),
+				(int) Helpers.Calc.lerp(col1.getGreen(), col2.getGreen(), alpha / 255.0),
+				(int) Helpers.Calc.lerp(col1.getBlue(), col2.getBlue(), alpha / 255.0));
 	}
 
 	// --mouse related info!!!!!!--
@@ -231,7 +231,7 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 	public boolean firePressed() {
 		return fire;
 	}
-	
+
 	public boolean escapePressed() {
 		return escape;
 	}
@@ -282,17 +282,22 @@ public class Screen extends Canvas implements MouseInputListener, KeyListener {
 	public double getCamY() {
 		return cameraY + cameraOffsetY;
 	}
-	
+
 	public void setCameraPos(double x, double y) {
-		this.cameraX = x;
-		this.cameraY = y;
+		if (GlobalSettings.getGame() != null) {
+			this.cameraX = Helpers.Calc.clamp(x, 0, GlobalSettings.getGame().getCurrentWorld().getWidth()-getPixelWidth());
+			this.cameraY = Helpers.Calc.clamp(y, 0, GlobalSettings.getGame().getCurrentWorld().getHeight()-getPixelHeight());
+		}else {
+			this.cameraX = x;
+			this.cameraY = y;
+		}
 	}
-	
+
 	public void setCameraOffset(double x, double y) {
 		this.cameraOffsetX = x;
 		this.cameraOffsetY = y;
 	}
-	
+
 	public void shake(int length, int amount) {
 		this.shakeTimer = length;
 		this.shakeAmount = amount;
