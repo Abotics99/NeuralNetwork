@@ -44,6 +44,7 @@ public class Game {
 	
 	Music mainTheme;
 	ArrayList<CheckPoint> checkPoints = new ArrayList<CheckPoint>();
+	ArrayList<Decoration> decorations = new ArrayList<Decoration>();
 	
 	WorldLoader worldData;
 	
@@ -81,6 +82,10 @@ public class Game {
 			if(obj.getId() == 273) {
 				checkPoints.add(new CheckPoint(obj.getPosX(), obj.getPosY()-20, player));
 			}
+			
+			if(obj.getId() == 357) {
+				decorations.add(new Grass(obj.getPosX(), obj.getPosY()-10));
+			}
 		}
 	}
 	
@@ -97,6 +102,7 @@ public class Game {
 		player.render();
 		renderEnemies();
 		renderCheckpoints();
+		renderDecorations();
 		fader.render();
 		if (pauseMenu && fader.isHidden()) {
 			play.render();
@@ -148,7 +154,7 @@ public class Game {
 				player.update();
 				updateEnemies();
 				updateCheckpoints();
-				
+				updateDecorations();
 				if(player.isDead() && Math.abs(player.playerVelX)<0.1) {
 					fader.fade();
 				}
@@ -249,6 +255,18 @@ public class Game {
 	private void renderCheckpoints() {
 		for (CheckPoint cp : checkPoints) {
 			cp.render();
+		}
+	}
+	
+	private void updateDecorations() {
+		for (Decoration decor : decorations) {
+			decor.update();
+		}
+	}
+
+	private void renderDecorations() {
+		for (Decoration decor : decorations) {
+			decor.render();
 		}
 	}
 

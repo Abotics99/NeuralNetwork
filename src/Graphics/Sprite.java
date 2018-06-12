@@ -66,8 +66,15 @@ public class Sprite {
 				for (int i = 0; i < sprite.length; i++) {
 					for (int j = 0; j < sprite[i].length; j++) {
 						if (sprite[i][j] != null) {
-							drawIcon(xPos + (j * 10 * scale) - (int) screen.getCamX(),
-									yPos + (i * 10 * scale) - (int) screen.getCamY(), sprite[i][j], 100, scale, false);
+							if (this.color != null) {
+								drawIcon(xPos + (j * 10 * scale) - (int) screen.getCamX(),
+										yPos + (i * 10 * scale) - (int) screen.getCamY(), sprite[i][j], 100, scale,
+										false);
+							} else {
+								drawTile(xPos + (j * 10 * scale) - (int) screen.getCamX(),
+										yPos + (i * 10 * scale) - (int) screen.getCamY(), sprite[i][j], 100, scale,
+										false);
+							}
 						}
 					}
 				}
@@ -85,11 +92,11 @@ public class Sprite {
 					for (int y = yPos; y < yPos + 10 * scale; y += scale) {
 						if (inverted) {
 							if (tile.getRGB(index / 10, index % 10) == Color.BLACK.getRGB()) {
-								drawSquare(x, y, shade, scale);
+								drawSquare(x, y, shade, this.color, scale);
 							}
 						} else {
 							if (tile.getRGB(index / 10, index % 10) == Color.WHITE.getRGB()) {
-								drawSquare(x, y, shade, scale);
+								drawSquare(x, y, shade, this.color, scale);
 							}
 						}
 						index++;
@@ -100,11 +107,11 @@ public class Sprite {
 					for (int y = yPos; y < yPos + 10 * scale; y += scale) {
 						if (inverted) {
 							if (tile.getRGB(index / 10, index % 10) == Color.BLACK.getRGB()) {
-								drawSquare(x, y, shade, scale);
+								drawSquare(x, y, shade, this.color, scale);
 							}
 						} else {
 							if (tile.getRGB(index / 10, index % 10) == Color.WHITE.getRGB()) {
-								drawSquare(x, y, shade, scale);
+								drawSquare(x, y, shade, this.color, scale);
 							}
 						}
 						index++;
@@ -114,7 +121,29 @@ public class Sprite {
 		}
 	}
 
-	private void drawSquare(int xPos, int yPos, int shade, int scale) {
+	private void drawTile(int xPos, int yPos, BufferedImage tile, int shade, int scale, boolean inverted) {
+		int index = 0;
+		if (xPos >= -10 * scale && yPos >= -10 * scale && xPos < screen.getPixelWidth()
+				&& yPos < screen.getPixelHeight()) {
+			if (flipped) {
+				for (int x = xPos + 10 * scale - 1; x >= xPos; x -= scale) {
+					for (int y = yPos; y < yPos + 10 * scale; y += scale) {
+						drawSquare(x, y, shade, new Color(tile.getRGB(index / 10, index % 10), true), scale);
+						index++;
+					}
+				}
+			} else {
+				for (int x = xPos; x < xPos + 10 * scale; x += scale) {
+					for (int y = yPos; y < yPos + 10 * scale; y += scale) {
+						drawSquare(x, y, shade, new Color(tile.getRGB(index / 10, index % 10), true), scale);
+						index++;
+					}
+				}
+			}
+		}
+	}
+
+	private void drawSquare(int xPos, int yPos, int shade, Color color, int scale) {
 		for (int y = yPos; y < yPos + scale; y++) {
 			for (int x = xPos; x < xPos + scale; x++) {
 				if (x >= 0 && x < screen.getPixelWidth()) {
@@ -169,15 +198,15 @@ public class Sprite {
 	public double getHeight() {
 		return sprite.length * 10;
 	}
-	
+
 	public void setFlashSpeed(int flashSpeed) {
 		this.flashSpeed = flashSpeed;
 	}
-	
+
 	public void setFlashing(boolean flashing) {
 		this.flashing = flashing;
 	}
-	
+
 	public boolean isFlashing() {
 		return flashing;
 	}

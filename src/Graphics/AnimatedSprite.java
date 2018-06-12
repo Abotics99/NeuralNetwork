@@ -25,6 +25,7 @@ public class AnimatedSprite {
 	boolean flashing = false;
 	boolean visible = true;
 	int flashSpeed = 3;
+	boolean drawn = true;
 
 	public AnimatedSprite(int[][][] frames, Color color, int scale, boolean looping, int updatesPerFrame,
 			boolean startHidden, boolean hideWhenDone) {
@@ -75,29 +76,31 @@ public class AnimatedSprite {
 			if (frame % flashSpeed == 0 && flashing)
 				visible = !visible;
 			if (visible || !flashing) {
-				if(flipped) {
+				if (flipped) {
 					for (int i = 0; i < sprite.length; i++) {
 						for (int j = 0; j < sprite[i].length; j++) {
 							if (sprite[i][j] != null) {
 								drawIcon(xPos + (j * 10 * scale) - (int) screen.getCamX(),
-										yPos + (i * 10 * scale) - (int) screen.getCamY(), sprite[i][Math.abs(j-sprite[0].length)-1], 100, scale, false);
+										yPos + (i * 10 * scale) - (int) screen.getCamY(),
+										sprite[i][Math.abs(j - sprite[0].length) - 1], 100, scale, false);
 							}
 						}
 					}
-				}else {
+				} else {
 					for (int i = 0; i < sprite.length; i++) {
 						for (int j = 0; j < sprite[i].length; j++) {
 							if (sprite[i][j] != null) {
 								drawIcon(xPos + (j * 10 * scale) - (int) screen.getCamX(),
-										yPos + (i * 10 * scale) - (int) screen.getCamY(), sprite[i][j], 100, scale, false);
+										yPos + (i * 10 * scale) - (int) screen.getCamY(), sprite[i][j], 100, scale,
+										false);
 							}
 						}
 					}
 				}
-				
+
 			}
 			if (!pause) {
-				frame+=1;
+				frame += 1;
 
 				if (frame >= (frames.length) * updatesPerFrame) {
 					if (looping) {
@@ -107,7 +110,7 @@ public class AnimatedSprite {
 							hidden = true;
 						} else {
 							pause = true;
-							frame-=1;
+							frame -= 1;
 						}
 					}
 				}
@@ -121,36 +124,43 @@ public class AnimatedSprite {
 		frame = 0;
 	}
 
+	public void setFrameNumber(int frameNum) {
+		frame = frameNum * updatesPerFrame;
+	}
+
 	private void drawIcon(int xPos, int yPos, BufferedImage tile, int shade, int scale, boolean inverted) {
 		int index = 0;
-		if (flipped) {
-			for (int x = xPos + 10 * scale - 1; x >= xPos; x -= scale) {
-				for (int y = yPos; y < yPos + 10 * scale; y += scale) {
-					if (inverted) {
-						if (tile.getRGB(index / 10, index % 10) == Color.BLACK.getRGB()) {
-							drawSquare(x, y, shade, scale);
+		if (xPos >= -10 * scale && yPos >= -10 * scale && xPos < screen.getPixelWidth()
+				&& yPos < screen.getPixelHeight()) {
+			if (flipped) {
+				for (int x = xPos + 10 * scale - 1; x >= xPos; x -= scale) {
+					for (int y = yPos; y < yPos + 10 * scale; y += scale) {
+						if (inverted) {
+							if (tile.getRGB(index / 10, index % 10) == Color.BLACK.getRGB()) {
+								drawSquare(x, y, shade, scale);
+							}
+						} else {
+							if (tile.getRGB(index / 10, index % 10) == Color.WHITE.getRGB()) {
+								drawSquare(x, y, shade, scale);
+							}
 						}
-					} else {
-						if (tile.getRGB(index / 10, index % 10) == Color.WHITE.getRGB()) {
-							drawSquare(x, y, shade, scale);
-						}
+						index++;
 					}
-					index++;
 				}
-			}
-		} else {
-			for (int x = xPos; x < xPos + 10 * scale; x += scale) {
-				for (int y = yPos; y < yPos + 10 * scale; y += scale) {
-					if (inverted) {
-						if (tile.getRGB(index / 10, index % 10) == Color.BLACK.getRGB()) {
-							drawSquare(x, y, shade, scale);
+			} else {
+				for (int x = xPos; x < xPos + 10 * scale; x += scale) {
+					for (int y = yPos; y < yPos + 10 * scale; y += scale) {
+						if (inverted) {
+							if (tile.getRGB(index / 10, index % 10) == Color.BLACK.getRGB()) {
+								drawSquare(x, y, shade, scale);
+							}
+						} else {
+							if (tile.getRGB(index / 10, index % 10) == Color.WHITE.getRGB()) {
+								drawSquare(x, y, shade, scale);
+							}
 						}
-					} else {
-						if (tile.getRGB(index / 10, index % 10) == Color.WHITE.getRGB()) {
-							drawSquare(x, y, shade, scale);
-						}
+						index++;
 					}
-					index++;
 				}
 			}
 		}
@@ -231,21 +241,21 @@ public class AnimatedSprite {
 	public boolean isPaused() {
 		return pause;
 	}
-	
+
 	public void setLooping(boolean looping) {
 		this.looping = looping;
 	}
-	
+
 	public void setFrames(int[][][] frames) {
 		frame = 0;
 		this.frames = frames;
 	}
-	
+
 	public void setUpdatesPerFrame(int updates) {
 		this.updatesPerFrame = updates;
 	}
-	
-	public int[][][] getFrames(){
+
+	public int[][][] getFrames() {
 		return frames;
 	}
 }

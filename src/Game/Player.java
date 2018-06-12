@@ -25,6 +25,7 @@ public class Player implements Transform {
 	double jumpHeight = 4.5;
 	double terminalVelocity = 10;
 	boolean grounded = false;
+	boolean shootHop = true;
 	int animationTimer = 0;
 	boolean canJump = false;
 	Projectile projectile;
@@ -190,6 +191,7 @@ public class Player implements Transform {
 				dustPlume.restartAnim();
 			}
 			grounded = true;
+			shootHop = true;
 		} else {
 			grounded = false;
 		}
@@ -293,8 +295,9 @@ public class Player implements Transform {
 							projectile.shoot(playerX, playerY, 1, 0);
 						}
 					} else {
-						if (projectile.isHidden()) {
+						if (projectile.isHidden() && shootHop) {
 							playerVelY = -y * 4;
+							shootHop = false;
 						}
 						projectile.shoot(playerX, playerY, x, y);
 

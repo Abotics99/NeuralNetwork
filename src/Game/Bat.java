@@ -185,7 +185,7 @@ public class Bat implements Enemy, Transform, Hazard {
 		if (iFrame <= 0 && !dead) {
 			health -= damage;
 			hit.play();
-			iFrame = 50;
+			iFrame = 10;
 			if (!idle) {
 				velX = transform.getVelX() / 4;
 				velY = (transform.getVelY() / 4);

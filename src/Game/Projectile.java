@@ -240,4 +240,8 @@ public class Projectile implements Transform {
 	public double getVelY() {
 		return velY;
 	}
+	
+	public boolean isReturning() {
+		return returning;
+	}
 }
