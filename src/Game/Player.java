@@ -64,7 +64,7 @@ public class Player implements Transform {
 
 	public Player(int x, int y, Sprite world) {
 		player = new Sprite(step_1, Color.WHITE, 1);
-		projectile = new Projectile(world);
+		projectile = new Projectile(world, this);
 		this.world = world;
 		playerX = x;
 		playerY = y;
@@ -122,7 +122,7 @@ public class Player implements Transform {
 		}
 		playerVelX *= dampening;
 		updateAnimations();
-		projectile.update(playerX, playerY);
+		projectile.update();
 		if(!projectile.isHidden()) {
 			runCycle =  new int[][][] {headlessIdle_1,headlessStep_1,headlessIdle_1,headlessStep_2};
 		}else {

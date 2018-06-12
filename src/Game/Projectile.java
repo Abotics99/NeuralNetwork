@@ -21,6 +21,8 @@ public class Projectile implements Transform {
 	private boolean hidden = true;
 	private boolean falling = false;
 	private boolean grounded = false;
+	
+	Transform player;
 
 	Sound returnSound;
 	Sound shootSound;
@@ -32,10 +34,11 @@ public class Projectile implements Transform {
 	int[][] spin_2 = new int[][] { { 327 } };
 	int[][] spin_3 = new int[][] { { 328 } };
 
-	public Projectile(Sprite world) {
+	public Projectile(Sprite world, Transform player) {
 		projectile = new AnimatedSprite(new int[][][] { spin_0, spin_1, spin_2, spin_3 }, Color.WHITE, 1, true, 3,
 				false, false);
 		this.world = world;
+		this.player = player;
 		returnSound = new Sound("projectileReturn");
 		shootSound = new Sound("shoot");
 		hitWallSound = new Sound("impact1");
@@ -47,7 +50,7 @@ public class Projectile implements Transform {
 		projectile.isHidden(hidden);
 	}
 
-	public void update(double x, double y) {
+	public void update() {
 		if (timer > 0 && !falling) {
 			timer--;
 			if (timer == 0) {
@@ -55,10 +58,10 @@ public class Projectile implements Transform {
 				falling = false;
 			}
 		}
+		double tempX = player.getPosX() - posX;
+		double tempY = player.getPosY() - posY;
 		if (returning) {
 			timer = 0;
-			double tempX = x - posX;
-			double tempY = y - posY;
 			double dist = Math.sqrt(Math.pow(tempX, 2) + Math.pow(tempY, 2));
 			velX = tempX / dist;
 			velY = tempY / dist;
@@ -78,6 +81,10 @@ public class Projectile implements Transform {
 		} else if (falling) {
 			velY += 0.05;
 			velX *= 0.95;
+			if(Math.abs(tempX) < 5 && Math.abs(tempY+10) < 2) {
+				velY = Math.abs(player.getVelX()) * -0.3;
+				velX = player.getVelX() * 0.5;
+			}
 			updateCollisions(world, 200, -1, -1, 11, 11);
 			posX += velX * speed;
 			posY += velY * speed;
